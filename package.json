@@ -1,0 +1,30 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "My second frontend project",
+  "bin": {
+    "gendiff": "bin/gendiff.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oromaniko/frontend-project-lvl2.git"
+  },
+  "author": "oromaniko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oromaniko/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/oromaniko/frontend-project-lvl2#readme",
+  "devDependencies": {
+    "eslint": "^8.3.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3"
+  },
+  "dependencies": {
+    "commander": "^8.3.0"
+  }
+}
