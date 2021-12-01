@@ -13,7 +13,7 @@ const genDiff = (filepath1, filepath2) => {
 
   const diff = { ...markedFile1, ...markedFile2 };
   const sortedDiff = _.sortBy(Object.entries(diff), ([key]) => key.slice(2));
-  return JSON.stringify(_.fromPairs(sortedDiff), null, ' ').replaceAll('"', '');
+  return JSON.stringify(_.fromPairs(sortedDiff), null, ' ').replace(/"/gi, '');
 };
 
 export default genDiff;
