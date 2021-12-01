@@ -30,6 +30,7 @@
     "@jest/globals": "^27.4.2",
     "commander": "^8.3.0",
     "jest-cli": "^27.4.3",
+    "js-yaml": "^4.1.0",
     "lodash": "^4.17.21"
   }
 }
