@@ -1,4 +1,5 @@
 /* eslint-disable quotes */
+import { test, expect } from '@jest/globals';
 import genDiff from '../src/index.js';
 
 test('genDiff flat', () => {
@@ -8,7 +9,7 @@ test('genDiff flat', () => {
     "- proxy": "123.234.53.22",
     "- timeout": 50,
     "+ timeout": 20,
-    "+ verbose": true
+    "+ verbose": true,
   }, null, ' ').replaceAll('"', '');
 
   expect(genDiff('/home/oulka/frontend-project-lvl2/src/file1.json', '/home/oulka/frontend-project-lvl2/src/file2.json')).toEqual(expected);
