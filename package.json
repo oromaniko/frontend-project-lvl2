@@ -1,6 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
+  "main": "src/index.js",
   "type": "module",
   "description": "My second frontend project",
   "bin": {
@@ -25,6 +26,7 @@
     "eslint-plugin-import": "^2.25.3"
   },
   "dependencies": {
-    "commander": "^8.3.0"
+    "commander": "^8.3.0",
+    "lodash": "^4.17.21"
   }
 }
