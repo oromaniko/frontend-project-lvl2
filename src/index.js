@@ -2,7 +2,7 @@ import path from 'path';
 import { readFileSync } from 'fs';
 import _ from 'lodash';
 import parse from './parsers.js';
-import stylish from './formatters/stylish.js';
+import format from './formatters/index.js';
 
 const makeDiff = (tree1, tree2) => {
   const keys = _.union(Object.keys(tree1), Object.keys(tree2));
@@ -17,7 +17,7 @@ const makeDiff = (tree1, tree2) => {
       type = 'still';
       after = value1;
     } else if (_.has(tree1, key) && !_.has(tree2, key)) {
-      type = 'deleted';
+      type = 'removed';
       after = value1;
     } else if (_.has(tree2, key) && !_.has(tree1, key)) {
       type = 'added';
@@ -26,7 +26,7 @@ const makeDiff = (tree1, tree2) => {
       type = 'still';
       after = makeDiff(value1, value2);
     } else {
-      type = 'changed';
+      type = 'updated';
       before = value1;
       after = value2;
     }
@@ -37,13 +37,13 @@ const makeDiff = (tree1, tree2) => {
   return diff;
 };
 
-const genDiff = (filepath1, filepath2) => {
+const genDiff = (filepath1, filepath2, formatter = 'stylish') => {
   const data1 = readFileSync(filepath1, 'utf-8');
   const data2 = readFileSync(filepath2, 'utf-8');
   const file1 = parse(data1, path.extname(filepath1));
   const file2 = parse(data2, path.extname(filepath2));
   const diff = makeDiff(file1, file2);
-  return stylish(diff);
+  return format(diff, formatter);
 };
 
 export default genDiff;
