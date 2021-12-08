@@ -25,26 +25,27 @@ const stringify = (value, replacer, spacesCount) => {
 
 const makeStyledObj = (data) => {
   const result = _.reduce(data, (acc, value, key) => {
+    const newAcc = _.cloneDeep(acc);
     const { type = false, before = '', after = value } = value;
     const val = _.isObject(after) ? makeStyledObj(after) : after;
     const bef = _.isObject(before) ? makeStyledObj(before) : before;
     switch (type) {
       case 'removed': {
-        acc[`- ${key}`] = val;
-        return acc;
+        newAcc[`- ${key}`] = val;
+        return newAcc;
       }
       case 'added': {
-        acc[`+ ${key}`] = val;
-        return acc;
+        newAcc[`+ ${key}`] = val;
+        return newAcc;
       }
       case 'updated': {
-        acc[`- ${key}`] = bef;
-        acc[`+ ${key}`] = val;
-        return acc;
+        newAcc[`- ${key}`] = bef;
+        newAcc[`+ ${key}`] = val;
+        return newAcc;
       }
       default:
-        acc[`  ${key}`] = val;
-        return acc;
+        newAcc[`  ${key}`] = val;
+        return newAcc;
     }
   }, {});
   return result;
