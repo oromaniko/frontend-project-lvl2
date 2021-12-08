@@ -1,45 +1,51 @@
 import _ from 'lodash';
 
-const stringify = (value, repl, spsCount) => {
-  const iter = (data, depth) => {
-    if (!_.isObject(data)) {
-      return String(data);
+const stringify = (value, replacer, spacesCount) => {
+  const iter = (currentValue, depth) => {
+    if (!_.isObject(currentValue)) {
+      return String(currentValue);
     }
 
-    const sps = repl.repeat(spsCount * depth);
-    const sps1 = repl.repeat(spsCount * (depth - 1));
-    const result = Object.entries(data)
-      .reduce((acc, entrie) => {
-        const [key, val] = entrie;
-        const newValue = iter(val, depth + 2);
-        return `${acc}${sps}${key}: ${newValue}\n`;
-      }, '');
-    return `{\n${result}${sps1}}`;
+    const indentSize = depth * spacesCount;
+    const currentIndent = replacer.repeat(indentSize);
+    const bracketIndent = replacer.repeat(indentSize - spacesCount);
+    const lines = Object
+      .entries(currentValue)
+      .map(([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 2)}`);
+
+    return [
+      '{',
+      ...lines,
+      `${bracketIndent}}`,
+    ].join('\n');
   };
 
   return iter(value, 1);
 };
 
 const makeStyledObj = (data) => {
-  const result = Object.entries(data).reduce((acc, item) => {
-    const [key, value] = item;
+  const result = _.reduce(data, (acc, value, key) => {
     const { type = false, before = '', after = value } = value;
     const val = _.isObject(after) ? makeStyledObj(after) : after;
     const bef = _.isObject(before) ? makeStyledObj(before) : before;
-    if (!type) {
-      acc[`  ${key}`] = val;
-    } else if (type === 'still') {
-      acc[`  ${key}`] = val;
-    } else if (type === 'deleted') {
-      acc[`- ${key}`] = val;
-    } else if (type === 'added') {
-      acc[`+ ${key}`] = val;
-    } else {
-      acc[`- ${key}`] = bef;
-      acc[`+ ${key}`] = val;
+    switch (type) {
+      case 'removed': {
+        acc[`- ${key}`] = val;
+        return acc;
+      }
+      case 'added': {
+        acc[`+ ${key}`] = val;
+        return acc;
+      }
+      case 'updated': {
+        acc[`- ${key}`] = bef;
+        acc[`+ ${key}`] = val;
+        return acc;
+      }
+      default:
+        acc[`  ${key}`] = val;
+        return acc;
     }
-
-    return acc;
   }, {});
   return result;
 };
