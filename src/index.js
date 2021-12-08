@@ -1,5 +1,4 @@
 import path from 'path';
-import { readFileSync } from 'fs';
 import _ from 'lodash';
 import parse from './parsers.js';
 import format from './formatters/index.js';
@@ -38,10 +37,8 @@ const makeDiff = (tree1, tree2) => {
 };
 
 const genDiff = (filepath1, filepath2, formatter = 'stylish') => {
-  const data1 = readFileSync(filepath1, 'utf-8');
-  const data2 = readFileSync(filepath2, 'utf-8');
-  const file1 = parse(data1, path.extname(filepath1));
-  const file2 = parse(data2, path.extname(filepath2));
+  const file1 = parse(filepath1, path.extname(filepath1));
+  const file2 = parse(filepath2, path.extname(filepath2));
   const diff = makeDiff(file1, file2);
   return format(diff, formatter);
 };
