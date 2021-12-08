@@ -9,29 +9,20 @@ const makeDiff = (tree1, tree2) => {
   const diff = sortedKeys.reduce((acc, key) => {
     const value1 = tree1[key];
     const value2 = tree2[key];
-    let type;
-    let before;
-    let after;
+
     if (_.isEqual(value1, value2)) {
-      type = 'still';
-      after = value1;
-    } else if (_.has(tree1, key) && !_.has(tree2, key)) {
-      type = 'removed';
-      after = value1;
-    } else if (_.has(tree2, key) && !_.has(tree1, key)) {
-      type = 'added';
-      after = value2;
-    } else if (_.isObject(value1) && _.isObject(value2)) {
-      type = 'still';
-      after = makeDiff(value1, value2);
-    } else {
-      type = 'updated';
-      before = value1;
-      after = value2;
+      return { ...acc, [key]: { type: 'still', after: value1 } };
     }
-    return {
-      ...acc, [key]: { type, before, after },
-    };
+    if (_.has(tree1, key) && !_.has(tree2, key)) {
+      return { ...acc, [key]: { type: 'removed', after: value1 } };
+    }
+    if (_.has(tree2, key) && !_.has(tree1, key)) {
+      return { ...acc, [key]: { type: 'added', after: value2 } };
+    }
+    if (_.isObject(value1) && _.isObject(value2)) {
+      return { ...acc, [key]: { type: 'still', after: makeDiff(value1, value2) } };
+    }
+    return { ...acc, [key]: { type: 'updated', before: value1, after: value2 } };
   }, {});
   return diff;
 };
